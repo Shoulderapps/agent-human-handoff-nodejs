@@ -20,6 +20,8 @@ module.exports = {
   EVENT_SYSTEM_ERROR: 'system error',
   EVENT_DISCONNECT: 'disconnect',
 
+  // EVENT_DISCONNECTED_CUSOTMER_TAB: 'disconnected customer tab',
+
   CONTEXT_OPERATOR_REQUEST: 'operator_request',
 
   OPERATOR_GREETING: `Hello, I'm a human. How can I help you?`

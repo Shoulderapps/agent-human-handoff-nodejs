@@ -21,12 +21,14 @@ const CustomerStore = require('./customerStore.js');
 const MessageRouter = require('./messageRouter.js');
 
 // Load and instantiate the API.AI client library
-const ApiAi = require('apiai');
-const apiAiApp = ApiAi(process.env.APIAI_ACCESS_TOKEN);
+//Ben
+// const ApiAi = require('apiai');	
+// const apiAiApp = ApiAi(process.env.APIAI_ACCESS_TOKEN);
 
 // Instantiate our app
 const customerStore = new CustomerStore();
-const messageRouter = new MessageRouter(customerStore, apiAiApp, io.of('/customer'), io.of('/operator'));
+// const messageRouter = new MessageRouter(customerStore, apiAiApp, io.of('/customer'), io.of('/operator'));
+const messageRouter = new MessageRouter(customerStore, io.of('/customer'), io.of('/operator'));		//Ben
 
 // Serve static html files for the customer and operator clients
 app.get('/customer', (req, res) => {

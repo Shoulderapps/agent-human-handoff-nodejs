@@ -44,6 +44,7 @@ class OperatorConnectionHandler extends ChatConnectionHandler {
       console.log('operator disconnected');
       this.onDisconnect();
     });
+        
   }
 
   // Called on receipt of input from the operator

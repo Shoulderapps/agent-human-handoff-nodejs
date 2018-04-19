@@ -39,7 +39,8 @@ class CustomerStore {
       return this
         .setCustomer(customerId, {
           id: customerId,
-          mode: CustomerStore.MODE_AGENT
+          // mode: CustomerStore.MODE_AGENT
+          mode: CustomerStore.MODE_OPERATOR   //ben
         })
         .then((newCustomer) => {
           // Attach this temporary flag to indicate that the customer is

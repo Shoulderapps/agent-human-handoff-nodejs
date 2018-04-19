@@ -25,7 +25,8 @@ limitations under the License.
       form button { width: 9%; background: rgb(130, 224, 255); border: none; padding: 10px; }
       #chatTabs { list-style-type: none; margin: 0; padding: 0; }
       #chatTabs li.chat-tab { padding: 5px; float: left; border: 1px solid black; border-radius: 10px 10px 0 0; cursor: default; }
-      #chatTabs li.chat-tab.selected { font-weight: bold; color: white; background-color: black; }
+      #chatTabs li.chat-tab.selected { font-weight: bold; color: white; background-color: blue; }
+      #chatTabs li.chat-tab.disconnected { font-weight: bold; color: white; background-color:red; }
       #chatWindows { clear: left; border-top: 1px solid black; }
       ul.chat-window { list-style-type: none; margin: 0; padding: 0; }
       ul.chat-window li { padding: 5px 10px; }
@@ -41,8 +42,8 @@ limitations under the License.
     <h1>Operator</h1>
     <ul id="chatTabs">
     </ul>
-    <div id="chatWindows">
-    </div>
+      <div id="chatWindows">
+      </div>
     <form>
       <input id="m" autocomplete="off" /><button>Send</button>
     </form>
@@ -54,8 +55,11 @@ limitations under the License.
 
         // UI elements for all the customers we currently aware of
         var connectedCustomers = {};
+        //ben UI elements for all the disconnected customers
+        var disconnectedCustomers = {};
         // Pointer to the currently open tab
         var currentTab;
+
 
         // The format we use to communicate a message to a specific customer
         var messageObject = function(customerId, utterance) {
@@ -118,6 +122,43 @@ limitations under the License.
           $('#chatTabs').append(newChatElements.tab);
           $('#chatWindows').append(newChatElements.window);
         };
+        
+        //Ben, delete disconnected tab
+        var deleteDisconnectedCustomerTab = function(customerId) {
+          var disconnectedChatElements = {};
+          disconnectedChatElements.customerId = customerId;
+          // A tab displaying the customer id
+          disconnectedChatElements.tab = $('<li class="chat-tab">').text(customerId);
+          // disconnectedChatElements.tab.addClass('disconnected');
+          // The chat log for this customer
+          disconnectedChatElements.window = $('<ul class="chat-window">').hide();
+
+          // var clickHandler = function() {
+          //   setCurrentTab(newChatElements);
+          // };
+          // newChatElements.tab.click(clickHandler);
+
+          disconnectedCustomers[customerId] = disconnectedChatElements;
+          console.log('inside delete disconnected customer tab id: ' + customerId);
+          console.log($('<li class="chat-tab">')  );
+          console.log($('<ul class="chat-window">'));
+          console.log(disconnectedCustomers[customerId].customerId);
+          console.log(disconnectedCustomers[customerId].tab);
+
+          // if(!currentTab) {
+          //   console.log('Setting current tab');
+          //   clickHandler();
+          // }
+
+          // $('#chatTabs').detach();
+          // $('#chatWindows').detach();
+          // $('li.chat-tab').removeClass('selected');
+          // they did not work
+          $('#chatTabs.li.chat-tab').detach();
+          $('#chatWindows.ul.chat-window').detach();
+          (disconnectedCustomers[customerId].tab).remove();
+        };
+
 
         // Notify the operator that a customer has requested them
         var notifyOperatorRequest = function(customerId) {
@@ -141,6 +182,19 @@ limitations under the License.
             .append($('<li class="customer-message">')
             .text('--- Customer disconnected ---'));
 
+          //ben
+          if(connectedCustomers[customerId].disconnected = true) {
+            console.log('before delete disconnected customer tab id: ' + customerId);
+          
+            // setTimeout(function(){
+            //   deleteDisconnnectedCustomerTab()
+            // }, 2000);
+
+            deleteDisconnectedCustomerTab(customerId);
+            return;
+          }
+            
+    
         };
 
         // Notify the operator of a system error
@@ -193,6 +247,7 @@ limitations under the License.
         socket.on('operator message', receivedOperatorMessage);
         socket.on('customer disconnected', notifyCustomerDisconnected);
         socket.on('system error', notifySystemError);
+        // socket.on('disconnected customer tab', disconnnectedCustomerTab);   //ben
 
       });
     </script>

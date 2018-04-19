@@ -18,9 +18,10 @@ const OperatorConnectionHandler = require('./operatorConnectionHandler.js');
 
 // Routes messages between connected customers, operators and API.AI agent
 class MessageRouter {
-  constructor (customerStore, apiAiApp, customerRoom, operatorRoom) {
+  // constructor (customerStore, apiAiApp, customerRoom, operatorRoom) {
+  constructor (customerStore, customerRoom, operatorRoom) {     //Ben
     // An API.AI client instance
-    this.apiAiApp = apiAiApp;
+    // this.apiAiApp = apiAiApp;      //Ben
     // An object that handles customer data persistence
     this.customerStore = customerStore;
     // Socket.io rooms for customers and operators
@@ -71,7 +72,10 @@ class MessageRouter {
     // If this is the first time we've seen this customer,
     // we should trigger the default welcome intent.
     if (customer.isNew) {
-      return this._sendEventToAgent(customer);
+     
+     console.log('in customer.isNew of _routeCustomer');  //Ben
+      // return this._sendEventToAgent(customer);
+      // return this._switchToOperator(customerId, customer, response);    //Ben
     }
 
     // Since all customer messages should show up in the operator chat,
@@ -80,7 +84,7 @@ class MessageRouter {
       .then(() => {
         // So all of our logs end up in API.AI, we'll always send the utterance to the
         // agent - even if the customer is in operator mode.
-        return this._sendUtteranceToAgent(utterance, customer);
+        // return this._sendUtteranceToAgent(utterance, customer);  //ben
       })
       .then(response => {
         // If the customer is in agent mode, we'll forward the agent's response to the customer.

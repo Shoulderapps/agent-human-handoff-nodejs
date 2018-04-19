@@ -12,6 +12,7 @@
 // limitations under the License.
 
 const AppConstants = require('./appConstants.js');
+const CustomerStore = require('./customerStore.js');
 const ChatConnectionHandler = require('./chatConnectionHandler.js');
 
 // Handles the connection to an individual customer
@@ -32,10 +33,12 @@ class CustomerConnectionHandler extends ChatConnectionHandler {
         console.log('A customer connected: ', customer);
         // If new, begin the API.AI conversation
         if (customer.isNew) {
-          return this.router._sendEventToAgent(customer)
-            .then(response => {
-              this._respondToCustomer(response.result.fulfillment.speech, this.socket);
-            });
+          console.log('A new customer is connected:');
+       // return this.router._sendEventToAgent(customer) 
+        
+          //Ben
+          this._respondToCustomer(AppConstants.OPERATOR_GREETING, this.socket);  //Ben
+
         }
         // If known, do nothing - they just reconnected after a network interruption
       })
@@ -45,6 +48,7 @@ class CustomerConnectionHandler extends ChatConnectionHandler {
         console.log('Error after customer connection: ', error);
         this._sendErrorToCustomer(error);
       });
+    
   }
 
   attachHandlers () {
@@ -53,7 +57,7 @@ class CustomerConnectionHandler extends ChatConnectionHandler {
       this._gotCustomerInput(message);
     });
     this.socket.on(AppConstants.EVENT_DISCONNECT, () => {
-      console.log('Customer disconnected');
+      console.log('Customer disconnected: ', this.socket.id); //ben
       this.router._sendConnectionStatusToOperator(this.socket.id, true);
       this.onDisconnect();
     });
